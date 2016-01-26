@@ -22,8 +22,9 @@ var repo = function(){
             messageList.push(msg);
 
             // overwrite the existing key: value pair with updated list
-            client.(msg.action.data[0].channel, messageList, function(err,res){
+            client.set(msg.action.data[0].channel, messageList, function(err,res){
                 //console.log(res);
+
             });
         });
     };
