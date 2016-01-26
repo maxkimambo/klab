@@ -18,11 +18,12 @@ var repo = function(){
             if (Array.isArray(res)){
                 messageList = res;
             }
-
             messageList.push(msg);
 
+            var topicMessages = [msg.action.data[0].channel].concat(messageList);
+
             // overwrite the existing key: value pair with updated list
-            client.set(msg.action.data[0].channel, messageList, function(err,res){
+            client.rpush(topicMessages, function(err,res){
                 //console.log(res);
 
             });

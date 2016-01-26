@@ -28,16 +28,16 @@ socketServer( 'demoserver1', function ( connection, server ) {
                 conn.send(msg.utf8Data);
 
 
-                repo.getByTopic('defaultChannel', function(err,res){
-                        console.log('got here');
-                    res.forEach(function(m){
-                        console.log(m);
-                    });
-                    if (Array.isArray(res)){
+                //repo.getByTopic('defaultChannel', function(err,res){
+                //        console.log('got here');
+                //    res.forEach(function(m){
+                //        console.log(m);
+                //    });
+                //    if (Array.isArray(res)){
+                //
+                //    }
 
-                    }
-
-                });
+                //});
 
             }
 
