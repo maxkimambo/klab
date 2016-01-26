@@ -84,7 +84,7 @@ function send2server(command, data) {
 
 
 function handleMessageFromServer(msg) {
-
+console.log(msg);
 	if (typeof msg.action.command !== 'undefined' && typeof msg.action.data !== 'undefined') {
 
 		if (msg.action.command === 'msg') {
@@ -120,10 +120,8 @@ function setupSocket() {
 		});
 		testSocket.on('open', function(e) {
 			jQuery('#wsstatus').text(Date.now() + ' connection open');
-			console.log('[open]');
+
 			testSocket.on('message', function(msg, e) {
-				//console.log('[message]');
-				//console.log(msg);
 				handleMessageFromServer(msg);
 			});
 		});
