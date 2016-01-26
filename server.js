@@ -16,10 +16,9 @@ socketServer( 'demoserver1', function ( connection, server ) {
     });
 
     connection.on('message', function ( msg ) {
-        console.log(msg);
-        //connection.send(msg.utf8Data);
-        //TODO: why the fuck is this not going out.
+       //TODO: why the fuck is this not going out.
         connections.forEach(function (conn) {
+            console.log(msg);
             conn.send(msg.utf8Data);
         });
     });

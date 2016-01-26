@@ -84,10 +84,13 @@ function send2server(command, data) {
 
 
 function handleMessageFromServer(msg) {
-	if (typeof msg.command !== 'undefined' && typeof msg.data !== 'undefined') {
-		if (msg.command === 'messages') {
-			for (var n=0; n<msg.data; n+=1) {
-				drawMessage(msg.data[n]);
+
+	if (typeof msg.action.command !== 'undefined' && typeof msg.action.data !== 'undefined') {
+
+		if (msg.action.command === 'msg') {
+
+			for (var n=0; n<msg.action.data.length; n++) {
+				drawMessage(msg.action.data[n]);
 			}
 		}
 	}
@@ -95,7 +98,8 @@ function handleMessageFromServer(msg) {
 
 
 function drawMessage(data) {
-	var msgString = '<span>{' + data.channel + '@' + data.timestamp + '} [' + data.author + '] ' + data.text + '</span><br/>';
+	console.log(data);
+	var msgString = '<span>{' + data.channel + '@' + new Date().toLocaleTimeString() + '} [' + data.author + '] ' + data.text + '</span><br/>';
 	jQuery('#messages').append(msgString);
 };
 
@@ -118,8 +122,8 @@ function setupSocket() {
 			jQuery('#wsstatus').text(Date.now() + ' connection open');
 			console.log('[open]');
 			testSocket.on('message', function(msg, e) {
-				console.log('[message]');
-				console.log(msg);
+				//console.log('[message]');
+				//console.log(msg);
 				handleMessageFromServer(msg);
 			});
 		});
