@@ -19,12 +19,17 @@ var repo = function(){
                 messageList = res;
             }
             messageList.push(msg);
-
-            var topicMessages = [msg.action.data[0].channel].concat(messageList);
+            var topic = msg.action.data[0].channel;
+            var topicMessages = [topic].concat(messageList);
 
             // overwrite the existing key: value pair with updated list
             client.rpush(topicMessages, function(err,res){
-                //console.log(res);
+                if(res){
+                    var lifetime = 24*60*60;
+                    // set the lifetime of the object.
+                    client.expire(topic, lifetime );
+                    console.log('set expiry to %s', lifetime); 
+                }
 
             });
         });
