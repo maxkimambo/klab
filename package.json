@@ -1,0 +1,21 @@
+{
+  "name": "klabchallenge",
+  "version": "0.0.1",
+  "description": "Klab Coding Challenge",
+  "main": "server.js",
+  "dependencies": { "websocket" : "~1.0.8" },
+  "engine"      : { "node" : ">= 0.6.0" },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maxkimambo/klab.git"
+  },
+  "author": "Max Kimambo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/maxkimambo/klab/issues"
+  },
+  "homepage": "https://github.com/maxkimambo/klab#readme"
+}
