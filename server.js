@@ -20,7 +20,19 @@ socketServer( 'demoserver1', function ( connection, server ) {
 
         var message = JSON.parse(msg.utf8Data);
 
+        // if any other command detected
+        // user has freshly connected and is awaiting previous messages.
+        // TODO: Deal with channel detection
+        if (message.action.command != 'msg'){
+            repo.getByTopic('defaultChannel', function(err,res){
+                res.forEach(function(m){
+                   // send just to this connection
+                    connection.send(m.utf8Data);
+                });
+            });
+        }
 
+        
         connections.forEach(function (conn) {
             if (message.id !== conn.id && conn !== connection){
                 console.log('sending to %s', conn.id);
@@ -28,26 +40,8 @@ socketServer( 'demoserver1', function ( connection, server ) {
                 conn.send(msg.utf8Data);
 
 
-                //repo.getByTopic('defaultChannel', function(err,res){
-                //        console.log('got here');
-                //    res.forEach(function(m){
-                //        console.log(m);
-                //    });
-                //    if (Array.isArray(res)){
-                //
-                //    }
-
-                //});
-
             }
-
-
-
-
         });
-
-
-
     });
 
     connection.on('error', function ( err ) {

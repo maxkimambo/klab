@@ -15,20 +15,22 @@ var repo = function(){
 
         // prefetch previous messages.
         client.get(msg.action.data[0].channel, function(err, res){
-            if (Array.isArray(res)){
-                messageList = res;
+            var data = JSON.parse(res);
+
+            if (Array.isArray(data)){
+                messageList = data;
             }
             messageList.push(msg);
             var topic = msg.action.data[0].channel;
-            var topicMessages = [topic].concat(messageList);
 
             // overwrite the existing key: value pair with updated list
-            client.rpush(topicMessages, function(err,res){
+            client.set(topic, JSON.stringify(messageList),  function(err,res){
+
                 if(res){
                     var lifetime = 24*60*60;
                     // set the lifetime of the object.
                     client.expire(topic, lifetime );
-                    console.log('set expiry to %s', lifetime); 
+                    console.log('set expiry to %s', lifetime);
                 }
 
             });
@@ -42,7 +44,8 @@ var repo = function(){
     var getByTopic = function (topic, cb){
 
         client.get(topic, function(err, res){
-                 cb(null, res);
+            var data = JSON.parse(res);
+                 cb(null, data);
             });
     };
 
