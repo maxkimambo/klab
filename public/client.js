@@ -84,7 +84,7 @@ function send2server(command, data) {
 
 
 function handleMessageFromServer(msg) {
-console.log(msg);
+
 	if (typeof msg.action.command !== 'undefined' && typeof msg.action.data !== 'undefined') {
 
 		if (msg.action.command === 'msg') {

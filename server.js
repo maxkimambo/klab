@@ -16,15 +16,13 @@ socketServer( 'demoserver1', function ( connection, server ) {
     });
 
     connection.on('message', function ( msg ) {
-        //console.log(connection);
+
         var message = JSON.parse(msg.utf8Data);
-        var i = 0;
+
         connections.forEach(function (conn) {
-            if (message.id != conn.id){
-                i++;
+            if (message.id !== conn.id && conn !== connection){
                 console.log('sending to %s', conn.id);
                 conn.send(msg.utf8Data);
-                console.log(i); 
             }
 
         });
