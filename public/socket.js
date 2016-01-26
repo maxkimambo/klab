@@ -339,7 +339,5 @@ window.Socket = (function(){
     }
   }
 
-
   return Socket;
-
 })();

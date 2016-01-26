@@ -1,9 +1,12 @@
 /**
  * Created by max on 26.01.16.
  */
-var config = {
+var path = require('path'),
+    rootPath = path.normalize(__dirname + '/..');
 
-    port		: 8080
+var config = {
+    port		: 8080,
+    root: rootPath
 };
 
 module.exports = config;

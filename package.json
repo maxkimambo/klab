@@ -3,8 +3,15 @@
   "version": "0.0.1",
   "description": "Klab Coding Challenge",
   "main": "server.js",
-  "dependencies": { "websocket" : "~1.0.8" },
-  "engine"      : { "node" : ">= 0.6.0" },
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.13.4",
+    "express-handlebars": "^2.0.1",
+    "websocket": "~1.0.8"
+  },
+  "engine": {
+    "node": ">= 0.6.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

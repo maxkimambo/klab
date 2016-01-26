@@ -20,11 +20,25 @@
 
 </head>
 <body>
+<ul id="messages"></ul>
+<form action="">
+  <input id="message" autocomplete="off" /><button>Send</button>
+</form>
 
   <!--<script src="../../client/socket.js"></script>-->
   <!--<script src="../../examples/public/main.js"></script>-->
+<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
   <script src="socket.js"></script>
   <script src="main.js"></script>
+  <script>
+    $('form').submit(function(e){
+      e.preventDefault();
+     var msg = $('#message').val();
+      io.send('save', msg);
+      $('#message').val('');
+    });
+
+  </script>
 
 </body>
 </html>
