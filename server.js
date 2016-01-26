@@ -3,7 +3,8 @@
  */
 
 var express = require('express'),
-    config  = require('./server/config.js'),
+    config  = require('./server/config'),
+    repo = require('./server/Repo'),
     socketServer  = require('./server/vws.socket.js').server;
 
 var connections = [];
@@ -19,13 +20,34 @@ socketServer( 'demoserver1', function ( connection, server ) {
 
         var message = JSON.parse(msg.utf8Data);
 
+
         connections.forEach(function (conn) {
             if (message.id !== conn.id && conn !== connection){
                 console.log('sending to %s', conn.id);
+                repo.save(message);
                 conn.send(msg.utf8Data);
+
+
+                repo.getByTopic('defaultChannel', function(err,res){
+                        console.log('got here');
+                    res.forEach(function(m){
+                        console.log(m);
+                    });
+                    if (Array.isArray(res)){
+
+                    }
+
+                });
+
             }
 
+
+
+
         });
+
+
+
     });
 
     connection.on('error', function ( err ) {

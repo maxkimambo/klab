@@ -41,8 +41,12 @@ function init() {
 
 
 function joinChannel() {
+
 	var channel = jQuery('#channel').val();
-	jQuery('#messages').empty();codeTest.channel = channel;
+	jQuery('#messages').empty();
+
+	codeTest.channel = channel;
+
 	drawMessage({ author:'system', channel: codeTest.channel, text: 'welcome to a new channel (' + channel + '), ' + codeTest.nickName, timestamp: new Date().toLocaleTimeString() });
 	return codeTest.channel;
 };
@@ -106,21 +110,29 @@ function drawMessage(data) {
 
 function setupSocket() {
 	try {
+
 		var testSocket = new Socket(codeTest.config.server, { autoReconnect: true });
+
 		testSocket.on('reconnect', function(msg, e) {
 			console.log('reconnected');
 		});
+
 		testSocket.on('close', function(e) {
 			console.log('[close]');
 			jQuery('#wsstatus').text(Date.now() + ' connection closed');
 		});
+
 		testSocket.on('error', function(e) {
 			console.log('[error]');
 			jQuery('#wsstatus').text(Date.now() + ' connection error');
 		});
+
 		testSocket.on('open', function(e) {
 			jQuery('#wsstatus').text(Date.now() + ' connection open');
 
+			// this is the reason why messages appear twice on the receiving end.
+			// the error is thrown but here msg is the first parameter.
+			// i guess its because of the stringfied json i didnt have time to look deeper.
 			testSocket.on('message', function(msg, e) {
 				handleMessageFromServer(msg);
 			});
