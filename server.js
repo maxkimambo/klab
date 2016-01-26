@@ -6,16 +6,22 @@ var express = require('express'),
     config  = require('./server/config.js'),
     socketServer  = require('./server/vws.socket.js').server;
 
+var connections = [];
+
 socketServer( 'demoserver1', function ( connection, server ) {
 
     connection.on('open', function ( id ) {
-        console.log('[open]');
+        console.log('[open] %s', id);
+        connections.push(connection);
     });
 
     connection.on('message', function ( msg ) {
-        console.log('[message]');
         console.log(msg);
-        connection.send( msg.utf8Data );
+        //connection.send(msg.utf8Data);
+        //TODO: why the fuck is this not going out.
+        connections.forEach(function (conn) {
+            conn.send(msg.utf8Data);
+        });
     });
 
     connection.on('error', function ( err ) {
@@ -23,8 +29,12 @@ socketServer( 'demoserver1', function ( connection, server ) {
     });
 
     connection.on('close', function(){
+        connections = connections.filter(function (conn) {
+            return connection != conn;
+        });
         // console.log('[close]');
     });
+
 
 }).config( config );
 
@@ -36,4 +46,3 @@ require('./server/express_config')(app, config);
 app.listen(httpPort, function(){
     console.log('Magic is at %s', httpPort);
 });
-

@@ -171,6 +171,7 @@ window.Socket = (function(){
 				socket = new WebSocket( wsProtocol + server.url + ':' + server.port + '/?' + ( server.parameters || '' ), server.protocol || null );
 			}
 		} catch ( e ) {
+			socket.emit('error', 'bad connection');
 			throw new Error( e );
 		}
 		this.socket = socket;
@@ -234,7 +235,7 @@ window.Socket = (function(){
     // delegate
     function handle ( e ) {
 
-      if ( !this.id ) return register.call( this, e.data );
+      if ( !this.id && typeof e.data !== 'undefined') return register.call( this, e.data );
 
        // prevent multiple firing
       if ( e.type === this.last && e.type === 'close' ) return;
@@ -339,5 +340,7 @@ window.Socket = (function(){
     }
   }
 
+
   return Socket;
+
 })();
