@@ -9,7 +9,7 @@ var client = redis.createClient();
 
 var repo = function(){
 
-    var save = function (msg){
+    var save = function (msg, payload){
 
         var messageList = [];
 
@@ -20,7 +20,7 @@ var repo = function(){
             if (Array.isArray(data)){
                 messageList = data;
             }
-            messageList.push(msg);
+            messageList.push(payload);
             var topic = msg.action.data[0].channel;
 
             // overwrite the existing key: value pair with updated list

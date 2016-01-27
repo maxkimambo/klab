@@ -48,6 +48,12 @@ function joinChannel() {
 	codeTest.channel = channel;
 
 	drawMessage({ author:'system', channel: codeTest.channel, text: 'welcome to a new channel (' + channel + '), ' + codeTest.nickName, timestamp: new Date().toLocaleTimeString() });
+	var command, data = {};
+
+	command = 'joinChannel';
+	data = [{author: codeTest.nickName, channel:  codeTest.channel, text: 'join channel' }];
+	send2server(command, data);
+
 	return codeTest.channel;
 };
 
