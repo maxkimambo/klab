@@ -4,6 +4,11 @@
 
 var redis = require('redis');
 var client = redis.createClient();
+// created for simplicity should be refactored out to its own module.
+var pub  = redis.createClient();
+
+// new instance required so that the publish client is not in subscribe mode.
+var sub  = redis.createClient();
 
 
 
@@ -34,11 +39,46 @@ var repo = function(){
                 }
 
             });
+
         });
     };
 
-    var get = function(id){
+    var publish  = function (msg, payload){
+        var channel  = msg.action.data[0].channel;
+            pub.publish(channel, JSON.stringify(payload));
+    };
 
+    var subscribe = function(channel){
+        sub.subscribe(channel);
+    };
+
+    var onMessage = function(channelToMonitor, handler){
+
+        sub.on('message', function(channel, message){
+           console.log(message);
+             handler(message);
+       });
+    };
+
+    var setHostInstance = function(host){
+        var hostInstances = [];
+        client.get('instances', function(err, res){
+            var data = JSON.parse(res);
+
+            if (Array.isArray(data) && data !== 'undefined'){
+                hostInstances = data;
+            }
+
+            // add a new host to tracked instances
+            hostInstances.push(host);
+
+            // set again with updated values.
+            client.set('instances', JSON.stringify(hostInstances), function(err, res){
+                if (res == 'OK'){
+                    console.log('added instance to redis %s', host);
+                }
+            });
+        });
     };
 
     var getByTopic = function (topic, cb){
@@ -51,8 +91,10 @@ var repo = function(){
 
     return {
         save: save,
-        get: get,
-        getByTopic:getByTopic
+        getByTopic:getByTopic,
+        publish: publish,
+        subscribe: subscribe,
+        onMessage: onMessage
     }
 };
 

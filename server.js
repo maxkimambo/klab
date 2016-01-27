@@ -7,6 +7,11 @@ var express = require('express'),
     repo = require('./server/Repo'),
     socketServer  = require('./server/vws.socket.js').server;
 
+var redis = require('redis');
+var sub = redis.createClient();
+var pub = redis.createClient();
+
+
 var connections = [];
 
 socketServer( 'demoserver1', function ( connection, server ) {
@@ -17,24 +22,34 @@ socketServer( 'demoserver1', function ( connection, server ) {
     });
 
     connection.on('message', function ( msg ) {
-        console.log(msg);
+
 
         var message = JSON.parse(msg.utf8Data);
-        console.log(message);
+
 
         // if any other command detected
         // user has freshly connected and is awaiting previous messages.
         // TODO: Deal with channel detection
         if (message.action.command != 'msg'){
-            console.log(message.action.data[0].channel);
 
             var channel = message.action.data[0].channel;
+
+            // publish to this channel
+            pub.publish(channel, msg);
+
+            sub.on('message', function(channel, subMessage){
+                console.log(channel);
+                console.log(subMessage);
+            });
+
+            sub.subscribe(channel);
+
 
             repo.getByTopic(channel, function(err,res){
 
                 if (Array.isArray(res) && res !== 'undefined'){
                     res.forEach(function(m){
-                        console.log(m);
+
                         // send just to this connection
                         connection.send(m.utf8Data);
                     });
