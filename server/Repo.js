@@ -60,26 +60,6 @@ var repo = function(){
        });
     };
 
-    var setHostInstance = function(host){
-        var hostInstances = [];
-        client.get('instances', function(err, res){
-            var data = JSON.parse(res);
-
-            if (Array.isArray(data) && data !== 'undefined'){
-                hostInstances = data;
-            }
-
-            // add a new host to tracked instances
-            hostInstances.push(host);
-
-            // set again with updated values.
-            client.set('instances', JSON.stringify(hostInstances), function(err, res){
-                if (res == 'OK'){
-                    console.log('added instance to redis %s', host);
-                }
-            });
-        });
-    };
 
     var getByTopic = function (topic, cb){
 

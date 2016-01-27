@@ -19,13 +19,12 @@ socketServer( 'demoserver1', function ( connection, server ) {
     connection.on('open', function ( id ) {
         console.log('[open] %s', id);
         connections.push(connection);
+
     });
 
     connection.on('message', function ( msg ) {
 
-
         var message = JSON.parse(msg.utf8Data);
-
 
         // if any other command detected
         // user has freshly connected and is awaiting previous messages.
@@ -34,16 +33,8 @@ socketServer( 'demoserver1', function ( connection, server ) {
 
             var channel = message.action.data[0].channel;
 
-            // publish to this channel
-            pub.publish(channel, msg);
-
-            sub.on('message', function(channel, subMessage){
-                console.log(channel);
-                console.log(subMessage);
-            });
-
+            // subscribe to the channel.
             sub.subscribe(channel);
-
 
             repo.getByTopic(channel, function(err,res){
 
@@ -67,9 +58,21 @@ socketServer( 'demoserver1', function ( connection, server ) {
                 repo.save(message, msg);
                 conn.send(msg.utf8Data);
 
+                // publish to other subscribers.
+
+                // publish to this channel
+                pub.publish(channel, msg);
 
             }
         });
+    });
+
+
+    sub.on('message', function(channel, subMessage){
+        console.log(channel);
+        console.log(subMessage);
+
+        // send message on to the client
     });
 
     connection.on('error', function ( err ) {
@@ -82,7 +85,6 @@ socketServer( 'demoserver1', function ( connection, server ) {
         });
         // console.log('[close]');
     });
-
 
 }).config( config );
 
