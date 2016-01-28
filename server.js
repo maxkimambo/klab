@@ -94,5 +94,5 @@ var httpPort = config.port +10;
 require('./server/express_config')(app, config);
 
 app.listen(httpPort, function(){
-    console.log('Magic is at %s', httpPort);
+    console.log('Point your browser to localhost on port %s', httpPort);
 });
